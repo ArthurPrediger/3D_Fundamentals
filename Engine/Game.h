@@ -21,6 +21,10 @@
 #pragma once
 
 #include "Graphics.h"
+#include "Cube.h"
+#include "PC3ScreenTransformer.h"
+#include "Mat3.h"
+#include "ChiliMath.h"
 
 class Game
 {
@@ -40,5 +44,12 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+
+	PC3ScreenTransformer pst;
+	Cube cube;
+	static constexpr float dTheta = PI;
+	float theta_x = 0.0f;
+	float theta_y = 0.0f;
+	float theta_z = 0.0f;
 	/********************************/
 };
