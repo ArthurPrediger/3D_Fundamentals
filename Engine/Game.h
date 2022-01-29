@@ -48,6 +48,7 @@ private:
 	PC3ScreenTransformer pst;
 	Cube cube;
 	static constexpr float dTheta = PI;
+	float offset_z = 2.0f;
 	float theta_x = 0.0f;
 	float theta_y = 0.0f;
 	float theta_z = 0.0f;
