@@ -246,6 +246,52 @@ Graphics::~Graphics()
 	if( pImmediateContext ) pImmediateContext->ClearState();
 }
 
+void Graphics::DrawFlatTopTriangle(const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c)
+{
+	const float m0 = (v2.x - v0.x) / (v2.y - v0.y);
+	const float m1 = (v2.x - v1.x) / (v2.y - v1.y);
+
+	const int yStart = (int)ceil(v0.y - 0.5f);
+	const int yEnd = (int)ceil(v2.y - 0.5f);
+
+	for (int y = yStart; y < yEnd; y++)
+	{
+		const float p0x = m0 * (float(y) + 0.5f - v0.y) + v0.x;
+		const float p1x = m1 * (float(y) + 0.5f - v1.y) + v1.x;
+
+		const int xStart = (int)ceil(p0x - 0.5f);
+		const int xEnd = (int)ceil(p1x - 0.5f);
+
+		for (int x = xStart; x < xEnd; x++)
+		{
+			PutPixel(x, y, c);
+		}
+	}
+}
+
+void Graphics::DrawFlatBottomTriangle(const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c)
+{
+	const float m0 = (v1.x - v0.x) / (v1.y - v0.y);
+	const float m1 = (v2.x - v0.x) / (v2.y - v0.y);
+
+	const int yStart = (int)ceil(v0.y - 0.5f);
+	const int yEnd = (int)ceil(v2.y - 0.5f);
+
+	for (int y = yStart; y < yEnd; y++)
+	{
+		const float p0x = m0 * (float(y) + 0.5f - v0.y) + v0.x;
+		const float p1x = m1 * (float(y) + 0.5f - v0.y) + v0.x;
+
+		const int xStart = (int)ceil(p0x - 0.5f);
+		const int xEnd = (int)ceil(p1x - 0.5f);
+
+		for (int x = xStart; x < xEnd; x++)
+		{
+			PutPixel(x, y, c);
+		}
+	}
+}
+
 void Graphics::EndFrame()
 {
 	HRESULT hr;
@@ -284,6 +330,45 @@ void Graphics::EndFrame()
 void Graphics::BeginFrame()
 {
 	sysBuffer.Clear( Colors::Red );
+}
+
+void Graphics::DrawTriangle(const Vec2& v0, const Vec2& v1, const Vec2& v2, Color c)
+{
+	const Vec2* pv0 = &v0;
+	const Vec2* pv1 = &v1;
+	const Vec2* pv2 = &v2;
+
+	if (pv1->y < pv0->y) std::swap(pv0, pv1);
+	if (pv2->y < pv1->y) std::swap(pv1, pv2);
+	if (pv1->y < pv0->y) std::swap(pv1, pv0);
+
+	if (pv0->y == pv1->y)
+	{
+		if (pv1->x < pv0->x) std::swap(pv0, pv1);
+		DrawFlatTopTriangle(*pv0, *pv1, *pv2, c);
+	}
+	else if (pv1->y == pv2->y)
+	{
+		if (pv2->x < pv1->x) std::swap(pv1, pv2);
+		DrawFlatBottomTriangle(*pv0, *pv1, *pv2, c);
+	}
+	else
+	{
+		const float alphaSplit = (pv1->y - pv0->y) / (pv2->y - pv0->y);
+
+		const Vec2 vi = *pv0 + (*pv2 - *pv0) * alphaSplit;
+
+		if (pv1->x < vi.x)
+		{
+			DrawFlatBottomTriangle(*pv0, *pv1, vi, c);
+			DrawFlatTopTriangle(*pv1, vi, *pv2, c);
+		}
+		else
+		{
+			DrawFlatBottomTriangle(*pv0, vi, *pv1, c);
+			DrawFlatTopTriangle(vi, *pv1, *pv2, c);
+		}
+	}
 }
 
 
