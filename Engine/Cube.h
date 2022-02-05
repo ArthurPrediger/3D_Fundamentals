@@ -30,7 +30,7 @@ public:
 			4,5,   5,7,   7,6,   6,4 }
 		};
 	}
-	IndexedTriangleList GetTriangles()
+	IndexedTriangleList GetTriangles() const
 	{
 		return {
 			vertices, {
