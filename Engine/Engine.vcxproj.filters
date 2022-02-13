@@ -16,6 +16,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{8b6c92a8-f65d-451e-80e3-d65773602b92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{5fbcef10-7cf6-46f2-b957-60910dcba862}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChiliWin.h">
@@ -90,6 +93,12 @@
     <ClInclude Include="SolidCubeScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TexVertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TexCubeScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXErr.cpp">
@@ -136,6 +145,9 @@
   <ItemGroup>
     <Image Include="Chili.ico">
       <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Images\sauron-bhole-100x100.png">
+      <Filter>Images</Filter>
     </Image>
   </ItemGroup>
 </Project>

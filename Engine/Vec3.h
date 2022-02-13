@@ -93,7 +93,7 @@ public:
 	{
 		x *= rhs;
 		y *= rhs;
-		z *= rhs
+		z *= rhs;
 		return *this;
 	}
 	Vec3_ operator*(const T& rhs) const
@@ -118,6 +118,10 @@ public:
 	bool operator!=(const Vec3_& rhs) const
 	{
 		return !(*this == rhs);
+	}
+	Vec3_ InterpolateTo(const Vec3_& dest, T alpha) const
+	{
+		return *this + (dest - *this) * alpha;
 	}
 public:
 	T z;
