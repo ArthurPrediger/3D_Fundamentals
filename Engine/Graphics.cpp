@@ -294,21 +294,36 @@ void Graphics::DrawFlatBottomTriangle(const Vec2& v0, const Vec2& v1, const Vec2
 
 void Graphics::DrawFlatTopTriangleTex(const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, const Surface& tex)
 {
-	const float m0 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
-	const float m1 = (v2.pos.x - v1.pos.x) / (v2.pos.y - v1.pos.y);
+	const float delta_y = v2.pos.y - v0.pos.y;
+	const TexVertex dv0 = (v2 - v0) / delta_y;
+	const TexVertex dv1 = (v2 - v1) / delta_y;
+
+	TexVertex itEdge1 = v1;
+
+	DrawFlatTriangleTex(v0, v1, v2, tex, dv0, dv1, itEdge1);
+}
+
+void Graphics::DrawFlatBottomTriangleTex(const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, const Surface& tex)
+{
+	const float delta_y = v2.pos.y - v0.pos.y;
+	const TexVertex dv0 = (v1 - v0) / delta_y;
+	const TexVertex dv1 = (v2 - v0) / delta_y;
+
+	TexVertex itEdge1 = v0;
+
+	DrawFlatTriangleTex(v0, v1, v2, tex, dv0, dv1, itEdge1);
+}
+
+void Graphics::DrawFlatTriangleTex(const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, const Surface& tex, 
+								   const TexVertex& dv0, const TexVertex& dv1, TexVertex& itEdge1)
+{
+	TexVertex itEdge0 = v0;
 
 	const int yStart = (int)ceil(v0.pos.y - 0.5f);
 	const int yEnd = (int)ceil(v2.pos.y - 0.5f);
 
-	Vec2 tcEdgeL = v0.tc;
-	Vec2 tcEdgeR = v1.tc;
-	const Vec2 tcBottom = v2.tc;
-
-	const Vec2 tcStepEdgeL = (tcBottom - tcEdgeL) / (v2.pos.y - v0.pos.y);
-	const Vec2 tcStepEdgeR = (tcBottom - tcEdgeR) / (v2.pos.y - v1.pos.y);
-
-	tcEdgeL += tcStepEdgeL * (float(yStart) + 0.5f - v1.pos.y);
-	tcEdgeR += tcStepEdgeR * (float(yStart) + 0.5f - v1.pos.y);
+	itEdge0 += dv0 * (float(yStart) + 0.5f - v0.pos.y);
+	itEdge1 += dv1 * (float(yStart) + 0.5f - v0.pos.y);
 
 	const float tex_width = float(tex.GetWidth());
 	const float tex_height = float(tex.GetHeight());
@@ -316,69 +331,20 @@ void Graphics::DrawFlatTopTriangleTex(const TexVertex& v0, const TexVertex& v1, 
 	const float tex_clamp_y = tex_height - 1.0f;
 
 	for (int y = yStart; y < yEnd; y++,
-		tcEdgeL += tcStepEdgeL, tcEdgeR += tcStepEdgeR)
+		itEdge0 += dv0, itEdge1 += dv1)
 	{
-		const float px0 = m0 * (float(y) + 0.5f - v0.pos.y) + v0.pos.x;
-		const float px1 = m1 * (float(y) + 0.5f - v1.pos.y) + v1.pos.x;
+		const int xStart = (int)ceil(itEdge0.pos.x - 0.5f);
+		const int xEnd = (int)ceil(itEdge1.pos.x - 0.5f);
 
-		const int xStart = (int)ceil(px0 - 0.5f);
-		const int xEnd = (int)ceil(px1 - 0.5f);
+		const Vec2 dtcLine = (itEdge1.tc - itEdge0.tc) / (itEdge1.pos.x - itEdge0.pos.x);
 
-		const Vec2 tcScanStep = (tcEdgeR - tcEdgeL) / (px1 - px0);
+		Vec2 itcLine = itEdge0.tc + dtcLine * (float(xStart) + 0.5f - itEdge0.pos.x);
 
-		Vec2 tc = tcEdgeL + tcScanStep * (float(xStart) + 0.5f - px0);
-
-		for (int x = xStart; x < xEnd; x++, tc += tcScanStep)
+		for (int x = xStart; x < xEnd; x++, itcLine += dtcLine)
 		{
 			PutPixel(x, y, tex.GetPixel(
-				int(std::min(tc.x * tex_width, tex_clamp_x)), 
-				int(std::min(tc.y * tex_width, tex_clamp_y))));
-		}
-	}
-}
-
-void Graphics::DrawFlatBottomTriangleTex(const TexVertex& v0, const TexVertex& v1, const TexVertex& v2, const Surface& tex)
-{
-	const float m0 = (v1.pos.x - v0.pos.x) / (v1.pos.y - v0.pos.y);
-	const float m1 = (v2.pos.x - v0.pos.x) / (v2.pos.y - v0.pos.y);
-
-	const int yStart = (int)ceil(v0.pos.y - 0.5f);
-	const int yEnd = (int)ceil(v2.pos.y - 0.5f);
-
-	Vec2 tcEdgeL = v0.tc;
-	Vec2 tcEdgeR = v0.tc;
-	const Vec2 tcBottomL = v1.tc;
-	const Vec2 tcBottomR = v2.tc;
-
-	const Vec2 tcStepEdgeL = (tcBottomL - tcEdgeL) / (v1.pos.y - v0.pos.y);
-	const Vec2 tcStepEdgeR = (tcBottomR - tcEdgeR) / (v2.pos.y - v0.pos.y);
-
-	tcEdgeL += tcStepEdgeL * (float(yStart) + 0.5f - v0.pos.y);
-	tcEdgeR += tcStepEdgeR * (float(yStart) + 0.5f - v0.pos.y);
-
-	const float tex_width = float(tex.GetWidth());
-	const float tex_height = float(tex.GetHeight());
-	const float tex_clamp_x = tex_width - 1.0f;
-	const float tex_clamp_y = tex_height - 1.0f;
-
-	for (int y = yStart; y < yEnd; y++, 
-		tcEdgeL += tcStepEdgeL, tcEdgeR += tcStepEdgeR)
-	{
-		const float px0 = m0 * (float(y) + 0.5f - v0.pos.y) + v0.pos.x;
-		const float px1 = m1 * (float(y) + 0.5f - v0.pos.y) + v0.pos.x;
-
-		const int xStart = (int)ceil(px0 - 0.5f);
-		const int xEnd = (int)ceil(px1 - 0.5f);
-
-		const Vec2 tcScanStep = (tcEdgeR - tcEdgeL) / (px1 - px0);
-
-		Vec2 tc = tcEdgeL + tcScanStep * (float(xStart) + 0.5f - px0);
-
-		for (int x = xStart; x < xEnd; x++, tc += tcScanStep)
-		{
-			PutPixel(x, y, tex.GetPixel(
-				int(std::min(tc.x * tex_width, tex_clamp_x)),
-				int(std::min(tc.y * tex_width, tex_clamp_y))));
+				int(std::min(itcLine.x * tex_width, tex_clamp_x)),
+				int(std::min(itcLine.y * tex_width, tex_clamp_y))));
 		}
 	}
 }
