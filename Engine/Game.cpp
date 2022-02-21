@@ -20,6 +20,8 @@
 ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "CubeSkinScene.h"
+#include "CubeVertexColorScene.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -27,6 +29,7 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd )
 {
 	scenes.push_back(std::make_unique<CubeSkinScene>(gfx, L"Images//dice_skin.png"));
+	scenes.push_back(std::make_unique<CubeVertexColorScene>(gfx));
 	curScene = scenes.begin();
 }
 
