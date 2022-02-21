@@ -119,10 +119,6 @@ public:
 	{
 		return !(*this == rhs);
 	}
-	Vec3_ InterpolateTo(const Vec3_& dest, T alpha) const
-	{
-		return *this + (dest - *this) * alpha;
-	}
 public:
 	T z;
 };

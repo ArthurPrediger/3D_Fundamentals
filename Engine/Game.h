@@ -21,7 +21,7 @@
 #pragma once
 
 #include "Graphics.h"
-#include "SolidCubeScene.h"
+#include "CubeSkinScene.h"
 #include <memory>
 
 class Game

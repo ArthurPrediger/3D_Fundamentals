@@ -20,15 +20,13 @@
 ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include "TexCubeScene.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd )
 {
-	scenes.push_back(std::make_unique<SolidCubeScene>());
-	scenes.push_back(std::make_unique<TexCubeScene>());
+	scenes.push_back(std::make_unique<CubeSkinScene>(gfx, L"Images//sauron-bhole-100x100.png"));
 	curScene = scenes.begin();
 }
 
@@ -66,5 +64,5 @@ void Game::CycleScenes()
 
 void Game::ComposeFrame()
 {
-	(*curScene)->Draw(gfx);
+	(*curScene)->Draw();
 }
