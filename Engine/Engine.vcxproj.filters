@@ -99,6 +99,9 @@
     <ClInclude Include="CubeSkinScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TextureEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXErr.cpp">
@@ -147,6 +150,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Images\sauron-bhole-100x100.png">
+      <Filter>Images</Filter>
+    </Image>
+    <Image Include="Images\dice_skin.png">
       <Filter>Images</Filter>
     </Image>
   </ItemGroup>

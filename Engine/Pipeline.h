@@ -8,72 +8,11 @@
 #include "Mat3.h"
 #include <algorithm>
 
+template<class Effect>
 class Pipeline
 {
 public:
-	class Vertex
-	{
-	public:
-		Vertex() = default;
-		Vertex(const Vec3& pos)
-			:
-			pos(pos)
-		{}
-		Vertex(const Vec3& pos, const Vertex& src)
-			:
-			t(src.t),
-			pos(pos)
-		{}
-		Vertex(const Vec3& pos, const Vec2& t)
-			:
-			t(t),
-			pos(pos)
-		{}
-		Vertex& operator +=(const Vertex& rhs)
-		{
-			pos += rhs.pos;
-			t += rhs.t;
-			return *this;
-		}
-		Vertex operator +(const Vertex& rhs) const
-		{
-			return Vertex(*this) += rhs;
-		}
-		Vertex& operator -=(const Vertex& rhs)
-		{
-			pos -= rhs.pos;
-			t -= rhs.t;
-			return *this;
-		}
-		Vertex operator -(const Vertex& rhs) const
-		{
-			return Vertex(*this) -= rhs;
-		}
-		Vertex& operator *=(float rhs)
-		{
-			pos *= rhs;
-			t *= rhs;
-			return *this;
-		}
-		Vertex operator *(float rhs) const
-		{
-			return Vertex(*this) *= rhs;
-		}
-		Vertex& operator /=(float rhs)
-		{
-			pos /= rhs;
-			t /= rhs;
-			return *this;
-		}
-		Vertex operator /(float rhs) const
-		{
-			return Vertex(*this) /= rhs;
-		}
-	public:
-		Vec3 pos;
-		Vec2 t;
-	};
-public:
+	typedef typename Effect::Vertex Vertex;
 	Pipeline(Graphics& gfx)
 		:
 		gfx(gfx)
@@ -89,10 +28,6 @@ public:
 	void BindTranslation(const Vec3& translation_in)
 	{
 		translation = translation_in;
-	}
-	void BindTexture(const std::wstring& filename)
-	{
-		pTex = std::make_unique<Surface>(Surface::FromFile(filename));
 	}
 private:
 	void ProcessVertices(const std::vector<Vertex>& vertices, const std::vector<size_t>& indices)
@@ -202,11 +137,6 @@ private:
 		itEdge0 += dit0 * (float(yStart) + 0.5f - it0.pos.y);
 		itEdge1 += dit1 * (float(yStart) + 0.5f - it0.pos.y);
 
-		const float tex_width = float(pTex->GetWidth());
-		const float tex_height = float(pTex->GetHeight());
-		const float tex_clamp_x = tex_width - 1.0f;
-		const float tex_clamp_y = tex_height - 1.0f;
-
 		for (int y = yStart; y < yEnd; y++,
 			itEdge0 += dit0, itEdge1 += dit1)
 		{
@@ -222,16 +152,15 @@ private:
 
 			for (int x = xStart; x < xEnd; x++, iLine += diLine)
 			{
-				gfx.PutPixel(x, y, pTex->GetPixel(
-					(unsigned int)std::min(iLine.t.x * tex_width, tex_clamp_x),
-					(unsigned int)std::min(iLine.t.y * tex_height, tex_clamp_y)));
+				gfx.PutPixel(x, y, effect.ps(iLine));
 			}
 		}
 	}
+public:
+	Effect effect;
 private:
 	Graphics& gfx;
 	PC3ScreenTransformer pst;
 	Mat3 rotation;
 	Vec3 translation;
-	std::unique_ptr<Surface> pTex;
 };

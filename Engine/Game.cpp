@@ -26,7 +26,7 @@ Game::Game( MainWindow& wnd )
 	wnd( wnd ),
 	gfx( wnd )
 {
-	scenes.push_back(std::make_unique<CubeSkinScene>(gfx, L"Images//sauron-bhole-100x100.png"));
+	scenes.push_back(std::make_unique<CubeSkinScene>(gfx, L"Images//dice_skin.png"));
 	curScene = scenes.begin();
 }
 

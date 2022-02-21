@@ -159,6 +159,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="TextureEffect.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vec3.h" />
@@ -241,6 +242,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Chili.ico" />
+    <Image Include="Images\dice_skin.png" />
     <Image Include="Images\sauron-bhole-100x100.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
