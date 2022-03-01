@@ -6,6 +6,7 @@
 #include "IndexedTriangleList.h"
 #include "PC3ScreenTransformer.h"
 #include "Mat3.h"
+#include "ZBuffer.h"
 #include <algorithm>
 
 template<class Effect>
@@ -15,7 +16,8 @@ public:
 	typedef typename Effect::Vertex Vertex;
 	Pipeline(Graphics& gfx)
 		:
-		gfx(gfx)
+		gfx(gfx),
+		zb(gfx.ScreenWidth, gfx.ScreenHeight)
 	{}
 	void Draw(IndexedTriangleList<Vertex>& triList)
 	{
@@ -28,6 +30,10 @@ public:
 	void BindTranslation(const Vec3& translation_in)
 	{
 		translation = translation_in;
+	}
+	void BeginFrame()
+	{
+		zb.Clear();
 	}
 private:
 	void ProcessVertices(const std::vector<Vertex>& vertices, const std::vector<size_t>& indices)
@@ -153,8 +159,12 @@ private:
 			for (int x = xStart; x < xEnd; x++, iLine += diLine)
 			{
 				const float z = 1.0f / iLine.pos.z;
-				const auto attr = iLine * z;
-				gfx.PutPixel(x, y, effect.ps(attr));
+
+				if (zb.TestAndSet(x, y, z))
+				{
+					const auto attr = iLine * z;
+					gfx.PutPixel(x, y, effect.ps(attr));
+				}
 			}
 		}
 	}
@@ -165,4 +175,5 @@ private:
 	PC3ScreenTransformer pst;
 	Mat3 rotation;
 	Vec3 translation;
+	ZBuffer zb;
 };
