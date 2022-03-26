@@ -55,7 +55,7 @@ private:
 			const auto& v1 = vertices[indices[i * 3 + 1]];
 			const auto& v2 = vertices[indices[i * 3 + 2]];
 
-			//cull backfacion triangles with cross product (%) shenanigans
+			//cull backfacing triangles with cross product (%) shenanigans
 			if ((v1.pos - v0.pos) % (v2.pos - v0.pos) * v0.pos <= 0.0f)
 			{
 				ProcessTriangle(v0, v1, v2);
