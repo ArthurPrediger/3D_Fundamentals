@@ -59,24 +59,24 @@ public:
 	}
 	static Mat3_ RotationZ(T theta)
 	{
-		const T cosTheta = cos(theta);
-		const T sinTheta = sin(theta);
+		const T cosTheta = (T)cos(theta);
+		const T sinTheta = (T)sin(theta);
 		return { cosTheta, -sinTheta, (T)0,
 				 sinTheta, cosTheta,  (T)0,
 				 (T)0,     (T)0,      (T)1 };
 	}
 	static Mat3_ RotationY(T theta)
 	{
-		const T cosTheta = cos(theta);
-		const T sinTheta = sin(theta);
+		const T cosTheta = (T)cos(theta);
+		const T sinTheta = (T)sin(theta);
 		return { cosTheta,  (T)0, sinTheta,
 			     (T)0,      (T)1, (T)0,
 				 -sinTheta, (T)0, cosTheta };
 	}
 	static Mat3_ RotationX(T theta)
 	{
-		const T cosTheta = cos(theta);
-		const T sinTheta = sin(theta);
+		const T cosTheta = (T)cos(theta);
+		const T sinTheta = (T)sin(theta);
 		return { (T)1, (T)0,      (T)0,
 				 (T)0, cosTheta, -sinTheta,
 				 (T)0, sinTheta, cosTheta };

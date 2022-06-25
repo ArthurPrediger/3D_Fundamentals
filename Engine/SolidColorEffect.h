@@ -64,6 +64,8 @@ public:
 		Color color;
 	};
 
+	typedef DefaultVertexShader<Vertex> VertexShader;
+
 	class PixelShader
 	{
 	public:
@@ -74,5 +76,6 @@ public:
 		}
 	};
 public:
+	VertexShader vs;
 	PixelShader ps;
 };

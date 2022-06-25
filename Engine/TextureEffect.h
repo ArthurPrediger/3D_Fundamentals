@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DefaultVertexShader.h"
 #include "Pipeline.h"
 
 class TextureEffect
@@ -68,6 +69,8 @@ public:
 		Vec2 t;
 	};
 
+	typedef DefaultVertexShader<Vertex> VertexShader;
+
 	class PixelShader
 	{
 	public:
@@ -94,5 +97,6 @@ public:
 		float tex_clamp_y;
 	};
 public:
+	VertexShader vs;
 	PixelShader ps;
 };
