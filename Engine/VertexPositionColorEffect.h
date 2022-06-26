@@ -146,6 +146,8 @@ public:
 		Vec3 translation;
 	};
 
+	typedef DefaultGeometryShader<VertexShader::Output> GeometryShader;
+
 	class PixelShader
 	{
 	public:
@@ -158,5 +160,6 @@ public:
 
 public:
 	VertexShader vs;
+	GeometryShader gs;
 	PixelShader ps;
 };
