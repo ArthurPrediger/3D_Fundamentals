@@ -88,7 +88,7 @@ private:
 		{
 			const float alphaSplit = (pv1->pos.y - pv0->pos.y) / (pv2->pos.y - pv0->pos.y);
 
-			const Vertex vi = *pv0 + (*pv2 - *pv0) * alphaSplit;
+			const VSOut vi = *pv0 + (*pv2 - *pv0) * alphaSplit;
 
 			if (pv1->pos.x < vi.pos.x)
 			{
@@ -125,7 +125,7 @@ private:
 	void DrawFlatTriangle(const VSOut& it0, const VSOut& it1, const VSOut& it2,
 		const VSOut& dit0, const VSOut& dit1, VSOut itEdge1)
 	{
-		Vertex itEdge0 = it0;
+		VSOut itEdge0 = it0;
 
 		const int yStart = (int)ceil(it0.pos.y - 0.5f);
 		const int yEnd = (int)ceil(it2.pos.y - 0.5f);
@@ -139,7 +139,7 @@ private:
 			const int xStart = (int)ceil(itEdge0.pos.x - 0.5f);
 			const int xEnd = (int)ceil(itEdge1.pos.x - 0.5f);
 
-			Vertex iLine = itEdge0;
+			VSOut iLine = itEdge0;
 
 			const float dx = itEdge1.pos.x - itEdge0.pos.x;
 			const auto diLine = (itEdge1 - iLine) / dx;
