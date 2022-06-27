@@ -29,7 +29,6 @@ public:
 	void BeginFrame()
 	{
 		zb.Clear();
-		triangle_index = 0u;
 	}
 private:
 	void ProcessVertices(const std::vector<Vertex>& vertices, const std::vector<size_t>& indices)
@@ -42,7 +41,7 @@ private:
 	}
 	void AssembleTriangles(const std::vector<VSOut>& vertices, const std::vector<size_t>& indices)
 	{
-		for (size_t i = 0, end = indices.size() / 3; i < end; i++, triangle_index++)
+		for (size_t i = 0, end = indices.size() / 3; i < end; i++)
 		{
 			const auto& v0 = vertices[indices[i * 3]];
 			const auto& v1 = vertices[indices[i * 3 + 1]];
@@ -51,11 +50,11 @@ private:
 			//cull backfacing triangles with cross product (%) shenanigans
 			if ((v1.pos - v0.pos) % (v2.pos - v0.pos) * v0.pos <= 0.0f)
 			{
-				ProcessTriangle(v0, v1, v2);
+				ProcessTriangle(v0, v1, v2, i);
 			}
 		}
 	}
-	void ProcessTriangle(const VSOut& v0, const VSOut& v1, const VSOut& v2)
+	void ProcessTriangle(const VSOut& v0, const VSOut& v1, const VSOut& v2, size_t triangle_index)
 	{
 		PostProcessTrianglesVertices(effect.gs( v0, v1, v2, triangle_index ));
 	}
@@ -167,5 +166,4 @@ private:
 	Graphics& gfx;
 	PC3ScreenTransformer pst;
 	ZBuffer zb;
-	unsigned int triangle_index = 0u;
 };
