@@ -89,6 +89,43 @@ public:
 		};
 	}
 	template<class V>
+	static IndexedTriangleList<V> GetIndependentFaceNormals(float size = 1.0f)
+	{
+		auto cube = GetPlainIndependentFaces<V>(size);
+
+		cube.vertices[0].n = { 0.0f, 0.0f, -1.0f };
+		cube.vertices[1].n = { 0.0f, 0.0f, -1.0f };
+		cube.vertices[2].n = { 0.0f, 0.0f, -1.0f };
+		cube.vertices[3].n = { 0.0f, 0.0f, -1.0f };
+
+		cube.vertices[4].n = { 0.0f, 0.0f, 1.0f };
+		cube.vertices[5].n = { 0.0f, 0.0f, 1.0f };
+		cube.vertices[6].n = { 0.0f, 0.0f, 1.0f };
+		cube.vertices[7].n = { 0.0f, 0.0f, 1.0f };
+
+		cube.vertices[8].n = { -1.0f, 0.0f, 0.0f };
+		cube.vertices[9].n = { -1.0f, 0.0f, 0.0f };
+		cube.vertices[10].n = { -1.0f, 0.0f, 0.0f };
+		cube.vertices[11].n = { -1.0f, 0.0f, 0.0f };
+
+		cube.vertices[12].n = { 1.0f, 0.0f, 0.0f };
+		cube.vertices[13].n = { 1.0f, 0.0f, 0.0f };
+		cube.vertices[14].n = { 1.0f, 0.0f, 0.0f };
+		cube.vertices[15].n = { 1.0f, 0.0f, 0.0f };
+
+		cube.vertices[16].n = { 0.0f, -1.0f, 0.0f };
+		cube.vertices[17].n = { 0.0f, -1.0f, 0.0f };
+		cube.vertices[18].n = { 0.0f, -1.0f, 0.0f };
+		cube.vertices[19].n = { 0.0f, -1.0f, 0.0f };
+
+		cube.vertices[20].n = { 0.0f, 1.0f, 0.0f };
+		cube.vertices[21].n = { 0.0f, 1.0f, 0.0f };
+		cube.vertices[22].n = { 0.0f, 1.0f, 0.0f };
+		cube.vertices[23].n = { 0.0f, 1.0f, 0.0f };
+
+		return cube;
+	}
+	template<class V>
 	static IndexedTriangleList<V> GetSkinned(float size = 1.0f)
 	{
 		const float side = size / 2.0f;

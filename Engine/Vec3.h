@@ -119,6 +119,32 @@ public:
 	{
 		return !(*this == rhs);
 	}
+	Vec3_& Saturate()
+	{
+		x = std::min(1.0f, std::max(0.0f, x));
+		y = std::min(1.0f, std::max(0.0f, y));
+		z = std::min(1.0f, std::max(0.0f, z));
+
+		return *this;
+	}
+	Vec3_ GetSaturated() const
+	{
+		Vec3_ temp(*this);
+		return temp.Saturate();
+	}
+	Vec3_& Hadamard(const Vec3_& rhs)
+	{
+		x *= rhs.x;
+		y *= rhs.y;
+		z *= rhs.z;
+
+		return *this;
+	}
+	Vec3_ GetHadamard(const Vec3_& rhs) const
+	{
+		Vec3_ temp(*this);
+		return temp.Hadamard(rhs);
+	}
 public:
 	T z;
 };

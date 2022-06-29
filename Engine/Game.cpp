@@ -27,12 +27,14 @@
 #include "VertexWaveScene.h"
 #include "CubeVertexPositionColorScene.h"
 #include "CubeSolidGeometryScene.h"
+#include "CubeFlatShadingIndependentScene.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd )
 {
+	scenes.push_back(std::make_unique<CubeFlatShadingIndependentScene>(gfx));
 	scenes.push_back(std::make_unique<CubeSkinScene>(gfx, L"Images//dice_skin.png"));
 	scenes.push_back(std::make_unique<CubeVertexColorScene>(gfx));
 	scenes.push_back(std::make_unique<CubeSolidScene>(gfx));
