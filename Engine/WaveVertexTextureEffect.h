@@ -100,7 +100,102 @@ public:
 		float amplitude = 0.05f;
 	};
 
-	typedef DefaultGeometryShader<VertexShader::Output> GeometryShader;
+	class GeometryShader
+	{
+	public:
+		class Output
+		{
+		public:
+			Output() = default;
+			Output(const Vec3& pos)
+				:
+				pos(pos)
+			{}
+			Output(const Vec3& pos, const Output& src)
+				:
+				t(src.t),
+				l(src.l),
+				pos(pos)
+			{}
+			Output(const Vec3& pos, const Vec2& t, float l)
+				:
+				t(t),
+				l(l),
+				pos(pos)
+			{}
+			Output& operator +=(const Output& rhs)
+			{
+				pos += rhs.pos;
+				t += rhs.t;
+				return *this;
+			}
+			Output operator +(const Output& rhs) const
+			{
+				return Output(*this) += rhs;
+			}
+			Output& operator -=(const Output& rhs)
+			{
+				pos -= rhs.pos;
+				t -= rhs.t;
+				return *this;
+			}
+			Output operator -(const Output& rhs) const
+			{
+				return Output(*this) -= rhs;
+			}
+			Output& operator *=(float rhs)
+			{
+				pos *= rhs;
+				t *= rhs;
+				return *this;
+			}
+			Output operator *(float rhs) const
+			{
+				return Output(*this) *= rhs;
+			}
+			Output& operator /=(float rhs)
+			{
+				pos /= rhs;
+				t /= rhs;
+				return *this;
+			}
+			Output operator /(float rhs) const
+			{
+				return Output(*this) /= rhs;
+			}
+		public:
+			Vec3 pos;
+			Vec2 t;
+			float l;
+		};
+	public:
+		Triangle<Output> operator()(const VertexShader::Output& v0, const VertexShader::Output& v1,
+			const VertexShader::Output& v2, size_t triangle_index) const
+		{
+			const auto n = ((v1.pos - v0.pos) % (v2.pos - v0.pos)).GetNormalized();
+
+			const auto l = std::min(1.0f, diffuse * std::max(0.0f, -n * dir) + ambient);
+
+			return { { v0.pos, v0.t, l }, { v1.pos, v1.t, l }, { v2.pos, v2.t, l } };
+		}
+		void SetDiffuseLight(float d)
+		{
+			ambient = d;
+		}
+		void SetAmbientLight(float a)
+		{
+			ambient = a;
+		}
+		void SetLightDirection(const Vec3& dl)
+		{
+			assert(dl.LenSq() >= 0.001f);
+			dir = dl.GetNormalized();
+		}
+	private:
+		Vec3 dir = { 0.0f, 0.0f, 1.0f };
+		float diffuse = 1.0f;
+		float ambient = 0.1f;
+	};
 
 	class PixelShader
 	{
@@ -108,9 +203,11 @@ public:
 		template<class Input>
 		Color operator()(const Input& in) const
 		{
-			return pTex->GetPixel(
+			const Vec3 color = Vec3(pTex->GetPixel(
 				(unsigned int)std::min(in.t.x * tex_width, tex_clamp_x),
-				(unsigned int)std::min(in.t.y * tex_height, tex_clamp_y));
+				(unsigned int)std::min(in.t.y * tex_height, tex_clamp_y)));
+
+			return Color(color * in.l);
 		}
 		void BindTexture(const std::wstring& filename)
 		{
