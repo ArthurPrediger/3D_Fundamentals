@@ -16,14 +16,14 @@ public:
 		{}
 		Vertex(const Vec3& pos, const Vertex& src)
 			:
-			n(src.n),
+			//n(src.n),
 			pos(pos)
 		{}
-		Vertex(const Vec3& pos, const Vec3& color)
-			:
-			n(n),
-			pos(pos)
-		{}
+		//Vertex(const Vec3& pos, const Vec3& n)
+		//	:
+		//	n(n),
+		//	pos(pos)
+		//{}
 		Vertex& operator +=(const Vertex& rhs)
 		{
 			pos += rhs.pos;
@@ -62,7 +62,7 @@ public:
 		}
 	public:
 		Vec3 pos;
-		Vec3 n;
+		//Vec3 n;
 	};
 
 	typedef DefaultVertexShader<Vertex> VertexShader;
@@ -83,7 +83,7 @@ public:
 				color(src.color),
 				pos(pos)
 			{}
-			Output(const Vec3& pos, const Vec3& color)
+			Output(const Vec3& pos, const Color& color)
 				:
 				color(color),
 				pos(pos)
@@ -91,7 +91,6 @@ public:
 			Output& operator +=(const Output& rhs)
 			{
 				pos += rhs.pos;
-				color += rhs.color;
 				return *this;
 			}
 			Output operator +(const Output& rhs) const
@@ -101,7 +100,6 @@ public:
 			Output& operator -=(const Output& rhs)
 			{
 				pos -= rhs.pos;
-				color -= rhs.color;
 				return *this;
 			}
 			Output operator -(const Output& rhs) const
@@ -111,7 +109,6 @@ public:
 			Output& operator *=(float rhs)
 			{
 				pos *= rhs;
-				color *= rhs;
 				return *this;
 			}
 			Output operator *(float rhs) const
@@ -121,7 +118,6 @@ public:
 			Output& operator /=(float rhs)
 			{
 				pos /= rhs;
-				color /= rhs;
 				return *this;
 			}
 			Output operator /(float rhs) const
@@ -130,7 +126,7 @@ public:
 			}
 		public:
 			Vec3 pos;
-			Vec3 color;
+			Color color;
 		};
 	public:
 		Triangle<Output> operator()(const VertexShader::Output& v0, const VertexShader::Output& v1, 
@@ -140,7 +136,7 @@ public:
 
 			const auto d = diffuse * std::max(0.0f, -n * dir);
 
-			const auto c = color.GetHadamard(d + ambient).Saturate() * 255.0f;
+			const auto c = Color(color.GetHadamard(d + ambient).Saturate() * 255.0f);
 
 			return { { v0.pos, c }, { v1.pos, c }, { v2.pos, c } };
 		}
@@ -174,7 +170,7 @@ public:
 		template<class Input>
 		Color operator()(const Input& in) const
 		{
-			return Color(in.color);
+			return in.color;
 		}
 	};
 public:

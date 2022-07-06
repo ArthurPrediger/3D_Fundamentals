@@ -5,18 +5,21 @@
 #include "Mat3.h"
 #include "GeometryFlatEffect.h"
 
-class CubeGeometryFlatShadingScene : public Scene
+class GeometryFlatShadingScene : public Scene
 {
 public:
 	typedef Pipeline<GeometryFlatEffect> Pipeline;
 	typedef Pipeline::Vertex Vertex;
 public:
-	CubeGeometryFlatShadingScene(Graphics& gfx)
+	GeometryFlatShadingScene(Graphics& gfx, IndexedTriangleList<Vertex> itl)
 		:
-		itlist(Cube::GetPlain<Vertex>()),
+		itlist(std::move(itl)),
 		pipeline(gfx),
-		Scene("Cube flat geometry shading scene")
-	{}
+		Scene("Flat geometry shading scene")
+	{
+		itlist.AdjustToTrueCenter();
+		offset_z = itlist.GetRadius() * 1.6f;
+	}
 	virtual void Update(Keyboard& kbd, Mouse& mouse, float dt) override
 	{
 		if (kbd.KeyIsPressed('Q'))

@@ -17,7 +17,7 @@ public:
 		:
 		itlist(Cube::GetSkinned<Vertex>()),
 		pipeline(gfx),
-		Scene("Textured Cube skinned using texture: " + std::string(filename.begin(), filename.end()))
+		Scene("Textured Cube skinned scene")
 	{
 		pipeline.effect.ps.BindTexture(filename);
 	}

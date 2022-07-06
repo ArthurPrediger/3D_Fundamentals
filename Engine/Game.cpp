@@ -28,7 +28,7 @@
 #include "CubeVertexPositionColorScene.h"
 #include "CubeSolidGeometryScene.h"
 #include "CubeFlatShadingIndependentScene.h"
-#include "CubeGeometryFlatShadingScene.h"
+#include "GeometryFlatShadingScene.h"
 
 Game::Game( MainWindow& wnd )
 	:
@@ -36,7 +36,8 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd )
 {
 	scenes.push_back(std::make_unique<CubeFlatShadingIndependentScene>(gfx));
-	scenes.push_back(std::make_unique<CubeGeometryFlatShadingScene>(gfx));
+	scenes.push_back(std::make_unique<GeometryFlatShadingScene>(gfx,
+		IndexedTriangleList<GeometryFlatShadingScene::Vertex>::Load("Models//bunny.obj")));
 	scenes.push_back(std::make_unique<CubeSkinScene>(gfx, L"Images//dice_skin.png"));
 	scenes.push_back(std::make_unique<CubeVertexColorScene>(gfx));
 	scenes.push_back(std::make_unique<CubeSolidScene>(gfx));

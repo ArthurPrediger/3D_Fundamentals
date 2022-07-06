@@ -25,6 +25,12 @@
     <Filter Include="Header Files\Scenes">
       <UniqueIdentifier>{b815fac2-16e9-447a-a1d0-185c06f21610}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tiny_obj_loader">
+      <UniqueIdentifier>{2b6e55e9-2eca-4f4b-9f06-7d6d47f9f205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Miniball">
+      <UniqueIdentifier>{1995d1d5-3c89-4896-bc86-513148b5bf80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChiliWin.h">
@@ -162,8 +168,14 @@
     <ClInclude Include="GeometryFlatEffect.h">
       <Filter>Header Files\Effects</Filter>
     </ClInclude>
-    <ClInclude Include="CubeGeometryFlatShadingScene.h">
+    <ClInclude Include="GeometryFlatShadingScene.h">
       <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h">
+      <Filter>tiny_obj_loader</Filter>
+    </ClInclude>
+    <ClInclude Include="Miniball.h">
+      <Filter>Miniball</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="GDIPlusManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tiny_obj_loader.cpp">
+      <Filter>tiny_obj_loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
