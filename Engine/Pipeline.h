@@ -8,6 +8,7 @@
 #include "Mat3.h"
 #include "ZBuffer.h"
 #include <algorithm>
+#include <memory>
 
 template<class Effect>
 class Pipeline
@@ -20,15 +21,22 @@ public:
 	Pipeline(Graphics& gfx)
 		:
 		gfx(gfx),
-		zb(gfx.ScreenWidth, gfx.ScreenHeight)
+		pZb(std::make_shared<ZBuffer>(gfx.ScreenWidth, gfx.ScreenHeight))
 	{}
+	Pipeline(Graphics& gfx, std::shared_ptr<ZBuffer> pZb)
+		:
+		gfx(gfx),
+		pZb(pZb)
+	{
+		assert(pZb->GetWidth() == gfx.ScreenWidth && pZb->GetHeight() == gfx.ScreenHeight);
+	}
 	void Draw(IndexedTriangleList<Vertex>& triList)
 	{
 		ProcessVertices(triList.vertices, triList.indices);
 	}
 	void BeginFrame()
 	{
-		zb.Clear();
+		pZb->Clear();
 	}
 private:
 	void ProcessVertices(const std::vector<Vertex>& vertices, const std::vector<size_t>& indices)
@@ -152,7 +160,7 @@ private:
 			{
 				const float z = 1.0f / iLine.pos.z;
 
-				if (zb.TestAndSet(x, y, z))
+				if (pZb->TestAndSet(x, y, z))
 				{
 					const auto attr = iLine * z;
 					gfx.PutPixel(x, y, effect.ps(attr));
@@ -165,5 +173,5 @@ public:
 private:
 	Graphics& gfx;
 	PC3ScreenTransformer pst;
-	ZBuffer zb;
+	std::shared_ptr<ZBuffer> pZb;
 };
