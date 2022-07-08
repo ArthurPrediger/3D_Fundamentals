@@ -29,6 +29,7 @@
 #include "CubeSolidGeometryScene.h"
 #include "CubeFlatShadingIndependentScene.h"
 #include "GeometryFlatShadingScene.h"
+#include "GouraudScene.h"
 #include "Sphere.h"
 
 Game::Game( MainWindow& wnd )
@@ -38,6 +39,7 @@ Game::Game( MainWindow& wnd )
 {
 	scenes.push_back(std::make_unique<GeometryFlatShadingScene>(gfx,
 		Sphere::GetPlain<GeometryFlatShadingScene::Vertex>()));
+	scenes.push_back(std::make_unique<GouraudScene>(gfx, Sphere::GetPlainNormals<GouraudScene::Vertex>()));
 	scenes.push_back(std::make_unique<CubeFlatShadingIndependentScene>(gfx));
 	scenes.push_back(std::make_unique<GeometryFlatShadingScene>(gfx,
 		IndexedTriangleList<GeometryFlatShadingScene::Vertex>::Load("Models//bunny.obj")));
