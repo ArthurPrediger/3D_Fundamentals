@@ -77,4 +77,15 @@ public:
 
 		return { std::move(vertices), std::move(indices) };
 	}
+
+	template <class V>
+	static IndexedTriangleList<V> GetPlainNormals(float radius = 1.0f, int latDiv = 12, int longDiv = 24)
+	{
+		auto sphere = Sphere::GetPlain(radius, latDiv, longDiv);
+		for (auto& v : sphere.vertices)
+		{
+			v.n = v.pos.GetNormalized();
+		}
+		return sphere;
+	}
 };
