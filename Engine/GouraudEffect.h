@@ -19,7 +19,7 @@ public:
 			n(src.n),
 			pos(pos)
 		{}
-		Vertex(const Vec3& pos, const Vec3& color)
+		Vertex(const Vec3& pos, const Vec3& n)
 			:
 			n(n),
 			pos(pos)

@@ -1,11 +1,9 @@
 #pragma once
 
-#pragma once
-
 #include "Pipeline.h"
 #include "DefaultGeometryShader.h"
 
-class GouraudPointEffect
+class PhongPointEffect
 {
 public:
 	class Vertex
@@ -26,42 +24,6 @@ public:
 			n(n),
 			pos(pos)
 		{}
-		Vertex& operator +=(const Vertex& rhs)
-		{
-			pos += rhs.pos;
-			return *this;
-		}
-		Vertex operator +(const Vertex& rhs) const
-		{
-			return Vertex(*this) += rhs;
-		}
-		Vertex& operator -=(const Vertex& rhs)
-		{
-			pos -= rhs.pos;
-			return *this;
-		}
-		Vertex operator -(const Vertex& rhs) const
-		{
-			return Vertex(*this) -= rhs;
-		}
-		Vertex& operator *=(float rhs)
-		{
-			pos *= rhs;
-			return *this;
-		}
-		Vertex operator *(float rhs) const
-		{
-			return Vertex(*this) *= rhs;
-		}
-		Vertex& operator /=(float rhs)
-		{
-			pos /= rhs;
-			return *this;
-		}
-		Vertex operator /(float rhs) const
-		{
-			return Vertex(*this) /= rhs;
-		}
 	public:
 		Vec3 pos;
 		Vec3 n;
@@ -80,18 +42,21 @@ public:
 			{}
 			Output(const Vec3& pos, const Output& src)
 				:
-				color(src.color),
+				n(src.n),
+				worldPos(src.worldPos),
 				pos(pos)
 			{}
-			Output(const Vec3& pos, const Vec3& color)
+			Output(const Vec3& pos, const Vec3& n, const Vec3& worldPos)
 				:
-				color(color),
+				n(n),
+				worldPos(worldPos),
 				pos(pos)
 			{}
 			Output& operator +=(const Output& rhs)
 			{
 				pos += rhs.pos;
-				color += rhs.color;
+				n += rhs.n;
+				worldPos += rhs.worldPos;
 				return *this;
 			}
 			Output operator +(const Output& rhs) const
@@ -101,7 +66,8 @@ public:
 			Output& operator -=(const Output& rhs)
 			{
 				pos -= rhs.pos;
-				color -= rhs.color;
+				n -= rhs.n;
+				worldPos -= rhs.worldPos;
 				return *this;
 			}
 			Output operator -(const Output& rhs) const
@@ -111,7 +77,8 @@ public:
 			Output& operator *=(float rhs)
 			{
 				pos *= rhs;
-				color *= rhs;
+				n *= rhs;
+				worldPos *= rhs;
 				return *this;
 			}
 			Output operator *(float rhs) const
@@ -121,7 +88,8 @@ public:
 			Output& operator /=(float rhs)
 			{
 				pos /= rhs;
-				color /= rhs;
+				n /= rhs;
+				worldPos /= rhs;
 				return *this;
 			}
 			Output operator /(float rhs) const
@@ -130,7 +98,8 @@ public:
 			}
 		public:
 			Vec3 pos;
-			Vec3 color;
+			Vec3 n;
+			Vec3 worldPos;
 		};
 	public:
 		void BindRotation(const Mat3& rotation_in)
@@ -145,18 +114,31 @@ public:
 		{
 			const auto pos = rotation * v.pos + translation;
 
-			const auto vec_to_l = light_pos - pos;
+			return { pos, rotation * v.n, pos };
+		}
+	private:
+		Mat3 rotation;
+		Vec3 translation;
+	};
+
+	typedef DefaultGeometryShader<VertexShader::Output> GeometryShader;
+
+	class PixelShader
+	{
+	public:
+		template<class Input>
+		Color operator()(const Input& in) const
+		{
+			const auto vec_to_l = light_pos - in.worldPos;
 			const auto dist = vec_to_l.Len();
 			const auto dir = vec_to_l / dist;
 
 			const auto attenuation = 1.0f /
 				(quadratic_attenuation * sq(dist) + linear_attenuation * dist + constant_attenuation);
 
-			const auto d = light_diffuse * attenuation * std::max(0.0f, (rotation * v.n) * dir);
+			const auto d = light_diffuse * attenuation * std::max(0.0f, in.n * dir);
 
-			const auto c = material_color.GetHadamard(d + light_ambient).GetSaturated() * 255.0f;
-
-			return { pos, c };
+			return Color(material_color.GetHadamard(d + light_ambient).GetSaturated() * 255.0f);
 		}
 		void SetDiffuseLight(const Vec3& c)
 		{
@@ -184,18 +166,6 @@ public:
 		float quadratic_attenuation = 2.69f;
 		float linear_attenuation = 1.05f;
 		float constant_attenuation = 0.369f;
-	};
-
-	typedef DefaultGeometryShader<VertexShader::Output> GeometryShader;
-
-	class PixelShader
-	{
-	public:
-		template<class Input>
-		Color operator()(const Input& in) const
-		{
-			return Color(in.color);
-		}
 	};
 public:
 	VertexShader vs;
