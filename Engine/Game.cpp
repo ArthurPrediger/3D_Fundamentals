@@ -33,6 +33,7 @@
 #include "GouraudPointScene.h"
 #include "PhongScene.h"
 #include "PhongPointScene.h"
+#include "SpecularPhongPointScene.h"
 #include "Sphere.h"
 
 Game::Game( MainWindow& wnd )
@@ -52,6 +53,8 @@ Game::Game( MainWindow& wnd )
 		IndexedTriangleList<GouraudPointScene::Vertex>::LoadNormals("Models//suzanne.obj")));
 	scenes.push_back(std::make_unique<PhongPointScene>(gfx,
 		IndexedTriangleList<PhongPointScene::Vertex>::LoadNormals("Models//suzanne.obj")));
+	scenes.push_back(std::make_unique<SpecularPhongPointScene>(gfx,
+		IndexedTriangleList<SpecularPhongPointScene::Vertex>::LoadNormals("Models//suzanne.obj")));
 	scenes.push_back(std::make_unique<CubeSkinScene>(gfx, L"Images//dice_skin.png"));
 	scenes.push_back(std::make_unique<CubeVertexColorScene>(gfx));
 	scenes.push_back(std::make_unique<CubeSolidScene>(gfx));

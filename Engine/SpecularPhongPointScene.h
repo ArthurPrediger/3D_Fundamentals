@@ -3,17 +3,17 @@
 #include "Scene.h"
 #include "Sphere.h"
 #include "Mat3.h"
-#include "PhongPointEffect.h"
+#include "SpecularPhongPointEffect.h"
 #include "SolidColorEffect.h"
 
-class PhongPointScene : public Scene
+class SpecularPhongPointScene : public Scene
 {
 public:
-	typedef ::Pipeline<PhongPointEffect> Pipeline;
+	typedef ::Pipeline<SpecularPhongPointEffect> Pipeline;
 	typedef Pipeline::Vertex Vertex;
 	typedef ::Pipeline<SolidColorEffect> LightIndicatorPipeline;
 public:
-	PhongPointScene(Graphics& gfx, IndexedTriangleList<Vertex> itl)
+	SpecularPhongPointScene(Graphics& gfx, IndexedTriangleList<Vertex> itl)
 		:
 		itlist(std::move(itl)),
 		pZb(std::make_shared<ZBuffer>(gfx.ScreenWidth, gfx.ScreenHeight)),
