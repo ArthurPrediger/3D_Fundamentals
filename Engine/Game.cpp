@@ -31,6 +31,7 @@
 #include "GeometryFlatShadingScene.h"
 #include "GouraudScene.h"
 #include "GouraudPointScene.h"
+#include "PhongScene.h"
 #include "PhongPointScene.h"
 #include "Sphere.h"
 
@@ -45,6 +46,8 @@ Game::Game( MainWindow& wnd )
 	scenes.push_back(std::make_unique<CubeFlatShadingIndependentScene>(gfx));
 	scenes.push_back(std::make_unique<GeometryFlatShadingScene>(gfx,
 		IndexedTriangleList<GeometryFlatShadingScene::Vertex>::Load("Models//bunny.obj")));
+	scenes.push_back(std::make_unique<PhongScene>(gfx,
+		IndexedTriangleList<PhongScene::Vertex>::LoadNormals("Models//suzanne.obj")));
 	scenes.push_back(std::make_unique<GouraudPointScene>(gfx,
 		IndexedTriangleList<GouraudPointScene::Vertex>::LoadNormals("Models//suzanne.obj")));
 	scenes.push_back(std::make_unique<PhongPointScene>(gfx,
