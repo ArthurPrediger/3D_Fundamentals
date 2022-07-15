@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 #include "Sphere.h"
-#include "Mat3.h"
+#include "Mat.h"
 #include "PhongPointEffect.h"
 #include "SolidColorEffect.h"
 

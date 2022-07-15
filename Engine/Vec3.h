@@ -12,10 +12,6 @@ public:
 		Vec2_<T>(x, y),
 		z(z)
 	{}
-	Vec3_(const Vec3_& vect)
-		:
-		Vec3_(vect.x, vect.y, vect.z)
-	{}
 	template <typename T2>
 	explicit operator Vec3_<T2>() const
 	{
@@ -113,7 +109,7 @@ public:
 	}
 	bool operator==(const Vec3_& rhs) const
 	{
-		return x == rhs.x && y == rhs.y && z = z.rhs;
+		return x == rhs.x && y == rhs.y && z == z.rhs;
 	}
 	bool operator!=(const Vec3_& rhs) const
 	{
