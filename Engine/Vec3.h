@@ -113,7 +113,7 @@ public:
 	}
 	bool operator==(const Vec3_& rhs) const
 	{
-		return x == rhs.x && y == rhs.y && z = z.rhs;
+		return x == rhs.x && y == rhs.y && z == z.rhs;
 	}
 	bool operator!=(const Vec3_& rhs) const
 	{

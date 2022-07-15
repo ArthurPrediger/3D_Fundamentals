@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mat3.h"
+#include "Mat.h"
 #include "IndexedTriangleList.h"
 
 class Sphere
