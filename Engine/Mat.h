@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Vec2.h"
-#include "Vec3.h"
+#include "Vec4.h"
 
 template<typename T, size_t S>
 class Mat
@@ -39,7 +38,7 @@ public:
 			for (size_t col_right = 0; col_right < S; col_right++)
 			{
 				T sum = (T)0;
-				for (int i = 0; i < 3; i++)
+				for (int i = 0; i < S; i++)
 				{
 					sum += elements[row_left][i] * rhs.elements[i][col_right];
 				}
@@ -178,7 +177,7 @@ public:
 				(T)1.0, (T)0.0,   (T)0.0,    (T)0.0,
 				(T)0.0, cosTheta, -sinTheta, (T)0.0,
 				(T)0.0, sinTheta, cosTheta,  (T)0.0,
-				(T)0.0,    (T)0.0, (T)0.0,   (T)1.0
+				(T)0.0, (T)0.0,   (T)0.0,    (T)1.0
 			};
 		}
 		else
@@ -225,6 +224,23 @@ Vec3_<T> operator*(const Mat<T, 3>& lhs, const Vec3_<T>& rhs)
 		lhs.elements[0][0] * rhs.x + lhs.elements[0][1] * rhs.y + lhs.elements[0][2] * rhs.z,
 		lhs.elements[1][0] * rhs.x + lhs.elements[1][1] * rhs.y + lhs.elements[1][2] * rhs.z,
 		lhs.elements[2][0] * rhs.x + lhs.elements[2][1] * rhs.y + lhs.elements[2][2] * rhs.z
+	};
+}
+
+template <typename T>
+Vec4_<T>& operator*=(const Vec4_<T>& lhs, const Mat<T, 4>& rhs)
+{
+	return lhs = rhs * lhs;
+}
+
+template <typename T>
+Vec4_<T> operator*(const Mat<T, 4>& lhs, const Vec4_<T>& rhs)
+{
+	return {
+		lhs.elements[0][0] * rhs.x + lhs.elements[0][1] * rhs.y + lhs.elements[0][2] * rhs.z + lhs.elements[0][3] * rhs.w,
+		lhs.elements[1][0] * rhs.x + lhs.elements[1][1] * rhs.y + lhs.elements[1][2] * rhs.z + lhs.elements[1][3] * rhs.w,
+		lhs.elements[2][0] * rhs.x + lhs.elements[2][1] * rhs.y + lhs.elements[2][2] * rhs.z + lhs.elements[2][3] * rhs.w,
+		lhs.elements[3][0] * rhs.x + lhs.elements[3][1] * rhs.y + lhs.elements[3][2] * rhs.z + lhs.elements[3][3] * rhs.w,
 	};
 }
 

@@ -97,28 +97,23 @@ public:
 				return Output(*this) /= rhs;
 			}
 		public:
-			Vec3 pos;
-			Vec3 n;
+			Vec4 pos;
+			Vec4 n;
 			Vec3 worldPos;
 		};
 	public:
-		void BindRotation(const Mat3& rotation_in)
+		void BindTransformation(const Mat4& transformation_in)
 		{
-			rotation = rotation_in;
-		}
-		void BindTranslation(const Vec3& translation_in)
-		{
-			translation = translation_in;
+			transformation = transformation_in;
 		}
 		Output operator()(const Vertex& v) const
 		{
-			const auto pos = rotation * v.pos + translation;
+			const auto pos = transformation * Vec4(v.pos);
 
-			return { pos, rotation * v.n, pos };
+			return { pos, transformation * Vec4(v.n, 0.0f), pos };
 		}
 	private:
-		Mat3 rotation;
-		Vec3 translation;
+		Mat4 transformation;
 	};
 
 	typedef DefaultGeometryShader<VertexShader::Output> GeometryShader;
