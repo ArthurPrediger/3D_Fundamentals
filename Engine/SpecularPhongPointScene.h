@@ -94,7 +94,7 @@ public:
 
 		const float screenRatio = float(Graphics::ScreenWidth) / float(Graphics::ScreenHeight);
 		//const auto proj = Mat4::Projection(2.0f * screenRatio, 2.0f, 1.0f, 10.0f);
-		const auto proj = Mat4::ProjectionHFOV(120.0f, screenRatio, 1.0f, 10.0f);
+		const auto proj = Mat4::ProjectionHFOV(120.0f, screenRatio, 0.01f, 10.0f);
 
 		// set pipeline transform
 		pipeline.effect.vs.BindWorld(
