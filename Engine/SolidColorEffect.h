@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DefaultVertexShader.h"
+#include "DefaultGeometryShader.h"
 #include "Pipeline.h"
 
 class SolidColorEffect
@@ -9,16 +11,16 @@ public:
 	{
 	public:
 		Vertex() = default;
-		Vertex(const Vec3& pos)
+		Vertex(const Vec4& pos)
 			:
 			pos(pos)
 		{}
-		Vertex(const Vec3& pos, const Vertex& src)
+		Vertex(const Vec4& pos, const Vertex& src)
 			:
 			color(src.color),
 			pos(pos)
 		{}
-		Vertex(const Vec3& pos, const Vec3& color)
+		Vertex(const Vec4& pos, const Vec3& color)
 			:
 			color(color),
 			pos(pos)
@@ -60,7 +62,7 @@ public:
 			return Vertex(*this) /= rhs;
 		}
 	public:
-		Vec3 pos;
+		Vec4 pos;
 		Color color;
 	};
 

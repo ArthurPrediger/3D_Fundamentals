@@ -20,19 +20,6 @@
 ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
-#include "CubeSkinScene.h"
-#include "CubeVertexColorScene.h"
-#include "CubeSolidScene.h"
-#include "DoubleCubeScene.h"
-#include "VertexWaveScene.h"
-#include "CubeVertexPositionColorScene.h"
-#include "CubeSolidGeometryScene.h"
-#include "CubeFlatShadingIndependentScene.h"
-#include "GeometryFlatShadingScene.h"
-#include "GouraudScene.h"
-#include "GouraudPointScene.h"
-#include "PhongScene.h"
-#include "PhongPointScene.h"
 #include "SpecularPhongPointScene.h"
 #include "Sphere.h"
 
@@ -41,27 +28,8 @@ Game::Game( MainWindow& wnd )
 	wnd( wnd ),
 	gfx( wnd )
 {
-	scenes.push_back(std::make_unique<GeometryFlatShadingScene>(gfx,
-		Sphere::GetPlain<GeometryFlatShadingScene::Vertex>()));
-	scenes.push_back(std::make_unique<GouraudScene>(gfx, Sphere::GetPlainNormals<GouraudScene::Vertex>()));
-	scenes.push_back(std::make_unique<CubeFlatShadingIndependentScene>(gfx));
-	scenes.push_back(std::make_unique<GeometryFlatShadingScene>(gfx,
-		IndexedTriangleList<GeometryFlatShadingScene::Vertex>::Load("Models//bunny.obj")));
-	scenes.push_back(std::make_unique<PhongScene>(gfx,
-		IndexedTriangleList<PhongScene::Vertex>::LoadNormals("Models//suzanne.obj")));
-	scenes.push_back(std::make_unique<GouraudPointScene>(gfx,
-		IndexedTriangleList<GouraudPointScene::Vertex>::LoadNormals("Models//suzanne.obj")));
-	scenes.push_back(std::make_unique<PhongPointScene>(gfx,
-		IndexedTriangleList<PhongPointScene::Vertex>::LoadNormals("Models//suzanne.obj")));
 	scenes.push_back(std::make_unique<SpecularPhongPointScene>(gfx,
 		IndexedTriangleList<SpecularPhongPointScene::Vertex>::LoadNormals("Models//suzanne.obj")));
-	scenes.push_back(std::make_unique<CubeSkinScene>(gfx, L"Images//dice_skin.png"));
-	scenes.push_back(std::make_unique<CubeVertexColorScene>(gfx));
-	scenes.push_back(std::make_unique<CubeSolidScene>(gfx));
-	scenes.push_back(std::make_unique<DoubleCubeScene>(gfx));
-	scenes.push_back(std::make_unique<VertexWaveScene>(gfx));
-	scenes.push_back(std::make_unique<CubeVertexPositionColorScene>(gfx));
-	scenes.push_back(std::make_unique<CubeSolidGeometryScene>(gfx));
 	curScene = scenes.begin();
 }
 

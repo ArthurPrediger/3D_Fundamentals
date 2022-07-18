@@ -81,7 +81,7 @@
     <ClInclude Include="Vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PC3ScreenTransformer.h">
+    <ClInclude Include="NDCScreenTransformer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Cube.h">

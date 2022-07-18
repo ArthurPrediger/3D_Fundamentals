@@ -6,19 +6,27 @@ class DefaultVertexShader
 public:
 	typedef Vertex Output;
 public:
-	void BindRotation(const Mat3& rotation_in)
+	void BindWorld(const Mat4& transformation_in)
 	{
-		rotation = rotation_in;
+		world = transformation_in;
 	}
-	void BindTranslation(const Vec3& translation_in)
+	void BindProjection(const Mat4& transformation_in)
 	{
-		translation = translation_in;
+		proj = transformation_in;
+		worldProj = proj * world;
 	}
-	Output operator()(const Vertex& in) const
+	Output operator()(const Vertex& v) const
 	{
-		return { (rotation * in.pos) + translation, in };
+		const auto pos = Vec4(v.pos);
+
+		return { worldProj * pos, v };
+	}
+	const Mat4& GetProj() const
+	{
+		return proj;
 	}
 private:
-	Mat3 rotation;
-	Vec3 translation;
+	Mat4 world = Mat4::Identity();
+	Mat4 proj = Mat4::Identity();
+	Mat4 worldProj = Mat4::Identity();
 };

@@ -4,7 +4,7 @@
 #include "Graphics.h"
 #include "Triangle.h"
 #include "IndexedTriangleList.h"
-#include "PC3ScreenTransformer.h"
+#include "NDCScreenTransformer.h"
 #include "Mat.h"
 #include "ZBuffer.h"
 #include <algorithm>
@@ -49,6 +49,8 @@ private:
 	}
 	void AssembleTriangles(const std::vector<VSOut>& vertices, const std::vector<size_t>& indices)
 	{
+		const auto eyePos = effect.vs.GetProj() * Vec4{ 0.0f, 0.0f, 0.0f, 1.0f };
+
 		for (size_t i = 0, end = indices.size() / 3; i < end; i++)
 		{
 			const auto& v0 = vertices[indices[i * 3]];
@@ -56,7 +58,7 @@ private:
 			const auto& v2 = vertices[indices[i * 3 + 2]];
 
 			//cull backfacing triangles with cross product (%) shenanigans
-			if ((v1.pos - v0.pos) % (v2.pos - v0.pos) * v0.pos <= 0.0f)
+			if ((v1.pos - v0.pos) % (v2.pos - v0.pos) * Vec3(v0.pos - eyePos) <= 0.0f)
 			{
 				ProcessTriangle(v0, v1, v2, i);
 			}
@@ -158,11 +160,11 @@ private:
 
 			for (int x = xStart; x < xEnd; x++, iLine += diLine)
 			{
-				const float z = 1.0f / iLine.pos.z;
+				const float w = 1.0f / iLine.pos.w;
 
-				if (pZb->TestAndSet(x, y, z))
+				if (pZb->TestAndSet(x, y, iLine.pos.z))
 				{
-					const auto attr = iLine * z;
+					const auto attr = iLine * w;
 					gfx.PutPixel(x, y, effect.ps(attr));
 				}
 			}
@@ -172,6 +174,6 @@ public:
 	Effect effect;
 private:
 	Graphics& gfx;
-	PC3ScreenTransformer pst;
+	NDCScreenTransformer pst;
 	std::shared_ptr<ZBuffer> pZb;
 };

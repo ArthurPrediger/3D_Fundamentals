@@ -36,17 +36,17 @@ public:
 		{
 		public:
 			Output() = default;
-			Output(const Vec3& pos)
+			Output(const Vec4& pos)
 				:
 				pos(pos)
 			{}
-			Output(const Vec3& pos, const Output& src)
+			Output(const Vec4& pos, const Output& src)
 				:
 				n(src.n),
 				worldPos(src.worldPos),
 				pos(pos)
 			{}
-			Output(const Vec3& pos, const Vec3& n, const Vec3& worldPos)
+			Output(const Vec4& pos, const Vec3& n, const Vec3& worldPos)
 				:
 				n(n),
 				worldPos(worldPos),
@@ -98,22 +98,33 @@ public:
 			}
 		public:
 			Vec4 pos;
-			Vec4 n;
+			Vec3 n;
 			Vec3 worldPos;
 		};
 	public:
-		void BindTransformation(const Mat4& transformation_in)
+		void BindWorld(const Mat4& transformation_in)
 		{
-			transformation = transformation_in;
+			world = transformation_in;
+		}
+		void BindProjection(const Mat4& transformation_in)
+		{
+			proj = transformation_in;
+			worldProj = proj * world;
 		}
 		Output operator()(const Vertex& v) const
 		{
-			const auto pos = transformation * Vec4(v.pos);
+			const auto pos = Vec4(v.pos);
 
-			return { pos, transformation * Vec4(v.n, 0.0f), pos };
+			return { worldProj * pos, world * Vec4(v.n, 0.0f), world * pos };
+		}
+		const Mat4& GetProj() const
+		{
+			return proj;
 		}
 	private:
-		Mat4 transformation;
+		Mat4 world = Mat4::Identity();
+		Mat4 proj = Mat4::Identity();
+		Mat4 worldProj = Mat4::Identity();
 	};
 
 	typedef DefaultGeometryShader<VertexShader::Output> GeometryShader;

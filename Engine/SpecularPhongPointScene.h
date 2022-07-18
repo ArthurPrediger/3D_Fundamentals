@@ -91,18 +91,25 @@ public:
 	virtual void Draw() override
 	{
 		pipeline.BeginFrame();
+
+		const float screenRatio = float(Graphics::ScreenWidth) / float(Graphics::ScreenHeight);
+		//const auto proj = Mat4::Projection(2.0f * screenRatio, 2.0f, 1.0f, 10.0f);
+		const auto proj = Mat4::ProjectionHFOV(120.0f, screenRatio, 1.0f, 10.0f);
+
 		// set pipeline transform
-		pipeline.effect.vs.BindTransformation(
+		pipeline.effect.vs.BindWorld(
 			Mat4::Translation(0.0f, 0.0f, offset_z) *
 			Mat4::RotationX(theta_x) *
 			Mat4::RotationY(theta_y) *
 			Mat4::RotationZ(theta_z));
+		pipeline.effect.vs.BindProjection(proj);
+
 		pipeline.effect.ps.SetLightPosition(light_pos);
 		// render triangles
 		pipeline.Draw(itlist);
 
-		liPipeline.effect.vs.BindRotation(Mat3::Identity());
-		liPipeline.effect.vs.BindTranslation(light_pos);
+		liPipeline.effect.vs.BindWorld(Mat4::Translation(light_pos));
+		liPipeline.effect.vs.BindProjection(proj);
 		liPipeline.Draw(lightIndicator);
 	}
 private:

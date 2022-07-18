@@ -3,6 +3,7 @@
 #include <limits>
 #include <cassert>
 #include <memory>
+#include <algorithm>
 
 class ZBuffer
 {
@@ -11,8 +12,13 @@ public:
 		:
 		width(width),
 		height(height),
-		pBuffer(std::make_unique<float[]>(width * height))
+		pBuffer(new float[width * height])
 	{}
+	~ZBuffer()
+	{
+		delete[] pBuffer;
+		pBuffer = nullptr;
+	}
 	ZBuffer(const ZBuffer&) = delete;
 	ZBuffer& operator=(const ZBuffer&) = delete;
 	void Clear()
@@ -53,8 +59,12 @@ public:
 	{
 		return height;
 	}
+	auto GetMinMax() const
+	{
+		return std::minmax_element(pBuffer, pBuffer + width * height);
+	}
 private:
 	int width;
 	int height;
-	std::unique_ptr<float[]> pBuffer = nullptr;
+	float* pBuffer = nullptr;
 };
