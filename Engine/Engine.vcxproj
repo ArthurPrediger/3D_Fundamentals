@@ -166,6 +166,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Mat.h" />
     <ClInclude Include="Miniball.h" />
+    <ClInclude Include="MouseTracker.h" />
     <ClInclude Include="PhongEffect.h" />
     <ClInclude Include="PhongPointEffect.h" />
     <ClInclude Include="PhongPointScene.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="SpecularPhongPointScene.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="TestTriangle.h" />
     <ClInclude Include="TextureEffect.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="Triangle.h" />

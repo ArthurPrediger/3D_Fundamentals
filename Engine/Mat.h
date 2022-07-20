@@ -54,7 +54,7 @@ public:
 		{
 			for (size_t j = 0; j < S; j++)
 			{
-				transpose[i][j] = elements[j][i];
+				transpose.elements[i][j] = elements[j][i];
 			}
 		}
 		return transpose;

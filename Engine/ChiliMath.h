@@ -41,7 +41,13 @@ T wrap_angle(T theta)
 }
 
 template<typename T>
-inline T interpolate(const T& src, const T& dest, float alpha)
+constexpr T interpolate(const T& src, const T& dest, float alpha)
 {
 	return src + (dest - src) * alpha;
+}
+
+template<typename T>
+constexpr T to_radians(T theta)
+{
+	return theta * (T)PI / (T)180.0;
 }

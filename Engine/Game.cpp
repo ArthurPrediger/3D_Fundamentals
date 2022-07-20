@@ -22,12 +22,15 @@
 #include "Game.h"
 #include "SpecularPhongPointScene.h"
 #include "Sphere.h"
+#include "TestTriangle.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd )
 {
+	scenes.push_back(std::make_unique<SpecularPhongPointScene>(gfx,
+		TestTriangle::GetNormals<SpecularPhongPointScene::Vertex>()));
 	scenes.push_back(std::make_unique<SpecularPhongPointScene>(gfx,
 		IndexedTriangleList<SpecularPhongPointScene::Vertex>::LoadNormals("Models//suzanne.obj")));
 	curScene = scenes.begin();
