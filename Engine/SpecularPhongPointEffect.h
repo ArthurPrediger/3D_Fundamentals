@@ -106,16 +106,21 @@ public:
 		{
 			world = transformation_in;
 		}
+		void BindView(const Mat4& transformation_in)
+		{
+			view = transformation_in;
+		}
 		void BindProjection(const Mat4& transformation_in)
 		{
 			proj = transformation_in;
-			worldProj = proj * world;
+			worldViewProj = proj * view * world;
 		}
 		Output operator()(const Vertex& v) const
 		{
 			const auto pos = Vec4(v.pos);
 
-			return { worldProj * pos, world * Vec4(v.n, 0.0f), world * pos };
+			const auto worldView = view * world;
+			return { worldViewProj * pos, worldView * Vec4(v.n, 0.0f), worldView * pos };
 		}
 		const Mat4& GetProj() const
 		{
@@ -123,8 +128,9 @@ public:
 		}
 	private:
 		Mat4 world = Mat4::Identity();
+		Mat4 view = Mat4::Identity();
 		Mat4 proj = Mat4::Identity();
-		Mat4 worldProj = Mat4::Identity();
+		Mat4 worldViewProj = Mat4::Identity();
 	};
 
 	typedef DefaultGeometryShader<VertexShader::Output> GeometryShader;

@@ -22,7 +22,7 @@ public:
 		Scene("Phong shader using point light scene")
 	{
 		itlist.AdjustToTrueCenter();
-		offset_z = itlist.GetRadius() * 1.6f;
+		mod_pos.z = itlist.GetRadius() * 1.6f;
 
 		for (auto& v : lightIndicator.vertices)
 		{
@@ -33,75 +33,36 @@ public:
 	{
 		if (kbd.KeyIsPressed('W'))
 		{
-			theta_x = wrap_angle(theta_x + dTheta * dt);
+			cam_pos.z += cam_speed * dt;
 		}
 		if (kbd.KeyIsPressed('A'))
 		{
-			theta_y = wrap_angle(theta_y + dTheta * dt);
-		}
-		if (kbd.KeyIsPressed('Q'))
-		{
-			theta_z = wrap_angle(theta_z + dTheta * dt);
+			cam_pos.x -= cam_speed * dt;
 		}
 		if (kbd.KeyIsPressed('S'))
 		{
-			theta_x = wrap_angle(theta_x - dTheta * dt);
+			cam_pos.z -= cam_speed * dt;
 		}
 		if (kbd.KeyIsPressed('D'))
 		{
-			theta_y = wrap_angle(theta_y - dTheta * dt);
-		}
-		if (kbd.KeyIsPressed('E'))
-		{
-			theta_z = wrap_angle(theta_z - dTheta * dt);
-		}
-		if (kbd.KeyIsPressed('U'))
-		{
-			light_pos.z += 0.2f * dt;
-		}
-		if (kbd.KeyIsPressed('I'))
-		{
-			light_pos.y += 0.2f * dt;
-		}
-		if (kbd.KeyIsPressed('O'))
-		{
-			light_pos.z -= 0.2f * dt;
-		}
-		if (kbd.KeyIsPressed('J'))
-		{
-			light_pos.x -= 0.2f * dt;
-		}
-		if (kbd.KeyIsPressed('K'))
-		{
-			light_pos.y -= 0.2f * dt;
-		}
-		if (kbd.KeyIsPressed('L'))
-		{
-			light_pos.x += 0.2f * dt;
-		}
-		if (kbd.KeyIsPressed('R'))
-		{
-			offset_z += 2.0f * dt;
-		}
-		if (kbd.KeyIsPressed('F'))
-		{
-			offset_z -= 2.0f * dt;
+			cam_pos.x += cam_speed * dt;
 		}
 	}
 	virtual void Draw() override
 	{
 		pipeline.BeginFrame();
 
-		const float screenRatio = float(Graphics::ScreenWidth) / float(Graphics::ScreenHeight);
-		//const auto proj = Mat4::Projection(2.0f * screenRatio, 2.0f, 1.0f, 10.0f);
-		const auto proj = Mat4::ProjectionHFOV(120.0f, screenRatio, 0.01f, 10.0f);
+
+		const auto proj = Mat4::ProjectionHFOV( hfov, aspect_ratio, 0.01f, 10.0f);
+		const auto view = Mat4::Translation(-cam_pos);
 
 		// set pipeline transform
 		pipeline.effect.vs.BindWorld(
-			Mat4::Translation(0.0f, 0.0f, offset_z) *
+			Mat4::Translation(mod_pos) *
 			Mat4::RotationX(theta_x) *
 			Mat4::RotationY(theta_y) *
 			Mat4::RotationZ(theta_z));
+		pipeline.effect.vs.BindView(view);
 		pipeline.effect.vs.BindProjection(proj);
 
 		pipeline.effect.ps.SetLightPosition(light_pos);
@@ -109,6 +70,7 @@ public:
 		pipeline.Draw(itlist);
 
 		liPipeline.effect.vs.BindWorld(Mat4::Translation(light_pos));
+		liPipeline.effect.vs.BindView(view);
 		liPipeline.effect.vs.BindProjection(proj);
 		liPipeline.Draw(lightIndicator);
 	}
@@ -119,10 +81,20 @@ private:
 		Sphere::GetPlain<SolidColorEffect::Vertex>(0.05f);
 	Pipeline pipeline;
 	LightIndicatorPipeline liPipeline;
-	static constexpr float dTheta = PI;
-	float offset_z = 2.0f;
+
+	static constexpr float aspect_ratio = float(Graphics::ScreenWidth) / float(Graphics::ScreenHeight);
+	static constexpr float hfov = 120.0f;
+	static constexpr float vfov = hfov / aspect_ratio;
+
+	static constexpr float htrack = hfov / float(Graphics::ScreenWidth);
+	static constexpr float vtrack = vfov / float(Graphics::ScreenHeight);
+	static constexpr float cam_speed = 1.0f;
+	Vec3 cam_pos = { 0.0f, 0.0f, 0.0f };
+
+	Vec3 mod_pos = { 0.0f, 0.0f, 2.0f };
 	float theta_x = 0.0f;
 	float theta_y = 135.0f;
 	float theta_z = 0.0f;
+
 	Vec3 light_pos = { 0.0f, 0.0f, 0.6f };
 };

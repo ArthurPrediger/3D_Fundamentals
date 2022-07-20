@@ -10,16 +10,20 @@ public:
 	{
 		world = transformation_in;
 	}
+	void BindView(const Mat4& transformation_in)
+	{
+		view = transformation_in;
+	}
 	void BindProjection(const Mat4& transformation_in)
 	{
 		proj = transformation_in;
-		worldProj = proj * world;
+		worldViewProj = proj * view * world;
 	}
 	Output operator()(const Vertex& v) const
 	{
 		const auto pos = Vec4(v.pos);
 
-		return { worldProj * pos, v };
+		return { worldViewProj * pos, v };
 	}
 	const Mat4& GetProj() const
 	{
@@ -27,6 +31,7 @@ public:
 	}
 private:
 	Mat4 world = Mat4::Identity();
+	Mat4 view = Mat4::Identity();
 	Mat4 proj = Mat4::Identity();
-	Mat4 worldProj = Mat4::Identity();
+	Mat4 worldViewProj = Mat4::Identity();
 };
